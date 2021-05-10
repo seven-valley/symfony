@@ -1,0 +1,31 @@
+{% extends 'front.html.twig' %}
+
+{% block title %} Ajouter un utilisateur {{ parent() }} {% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="{{ asset('css/login.css')}}">
+{% endblock %}
+
+{% block main %}
+    <div class="form-signin">
+     <h2 class="form-signin-heading">Ajouter un utilisateur</h2>
+   
+    {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.prenom) }}
+        {{ form_row(registrationForm.nom) }}
+        {{ form_row(registrationForm.email) }}
+        {{ form_row(registrationForm.plainPassword, {
+            label: 'Password'
+        }) }}
+       
+
+        <button type="submit" class="btn btn-lg btn-primary btn-block">
+        <i class="fa fa-plus"></i>
+        Ajouter</button>
+    {{ form_end(registrationForm) }}
+
+     {% for flashError in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+    {% endfor %}
+ </div>
+{% endblock %}

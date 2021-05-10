@@ -1,0 +1,33 @@
+{% extends 'front.html.twig' %}
+
+{#  je recupère le contenu du block parent #}
+{% block title %} Home {{ parent() }} {% endblock %}
+
+{% block main %}
+<div class="row">
+	<div class="offest-col-3 col-6">
+	<br>
+	<h3>Liste de personnes</h3>
+	<table class="table mt-5 table-striped">
+				<thead>
+					<tr>
+						<th>Prénom</th>
+						<th>Nom</th>
+						
+						
+					</tr>
+				</thead>
+				<tbody>
+				{% for personne in personnes %}
+					<tr>
+						<td>{{ personne.prenom }}</td>
+						<td>{{ personne.nom }}</td>
+					</tr>
+
+				{% endfor %}
+				</tbody>
+			</table>
+			</div>
+</div>
+{% endblock %}
+

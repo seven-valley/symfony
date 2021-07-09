@@ -3,25 +3,28 @@
 namespace App\Controller;
 
 use App\Entity\Personne;
+use App\Entity\User;
 use App\Form\PersonneType;
+use App\Form\UserType;
 use App\Repository\PersonneRepository;
 use Doctrine\ORM\EntityManagerInterface; 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\UserRepository;
 
 class AdminController extends AbstractController
 {
     /**
-     * @Route("/admin", name="admin")
+     * @Route("/bo", name="admin")
      */
     public function home(): Response
     {
         return $this->render('admin/home.html.twig');
     }
     /**
-     * @Route("/admin/personnes", name="admin_personnes")
+     * @Route("/bo/personnes", name="admin_personnes")
      */
     public function personnes(
         EntityManagerInterface $em,
@@ -51,7 +54,7 @@ class AdminController extends AbstractController
         ]);
     }
     /**
-     * @Route("/admin/delete-personne/{id}", name="delete_personne")
+     * @Route("/bo/delete-personne/{id}", name="delete_personne")
      */
     public function delete_personne(EntityManagerInterface $em, Personne $personne): Response
     {
@@ -60,7 +63,7 @@ class AdminController extends AbstractController
        return $this->redirectToRoute('admin_personnes'); 
     }
     /**
-     * @Route("/admin/etat/{id}", name="change_etat")
+     * @Route("/bo/etat/{id}", name="change_etat")
      */
     public function change_etat(EntityManagerInterface $em, Personne $personne): Response
     {
@@ -76,7 +79,7 @@ class AdminController extends AbstractController
        return $this->redirectToRoute('admin_personnes'); 
     }
     /**
-     * @Route("/admin/modifier-personne/{id}", 
+     * @Route("/bo/modifier-personne/{id}", 
             name="modifier_personne", 
             requirements={"id":"\d+"},
             methods={"GET","POST"})
@@ -103,5 +106,64 @@ class AdminController extends AbstractController
             'personneForm' => $form->createView()
         ]);
     }
+    /**
+     * @Route("/admin/list-user", name="admin_liste_user")
+     */
+    public function listeUser(UserRepository $repo): Response
+    {
+        
+       return $this->render('admin/list-user.html.twig',[
+            'users' => $repo->findAll()
+        ]);
+   }
+    /**
+     * @Route("/admin/change-user/{id}", name="admin_change_user")
+     */
+    public function changeUser(User $user, EntityManagerInterface $em): Response
+    {
+       // AdMIN ou USER ?
+       $tab = $user->getRoles(); // ROLE_USER ROLE_ADMIN
+       if ($tab[0] == 'ROLE_USER')
+       {
+        $user->setRoles(["ROLE_ADMIN"]);
+       }
+       else
+       {
+        $user->setRoles(["ROLE_USER"]);
+       }
+        $em->flush();
 
+      return $this->redirectToRoute('admin_liste_user'); 
+   }
+    /**
+     * @Route("/admin/delete/user/{id}", name="delete_user")
+     */
+    public function deleteUser(User $user, EntityManagerInterface $em): Response
+    {
+        $em->remove($user);
+        $em->flush();
+
+      return $this->redirectToRoute('admin_liste_user'); 
+   }
+
+    /**
+     * @Route("/admin/edit/user/{id}", name="edit_user")
+     */
+    public function editUser(User $user,Request $req, EntityManagerInterface $em): Response
+    {
+        $form =$this->createForm(UserType::class,$user);
+        $form->handleRequest($req);
+        if ($form->isSubmitted())
+        {
+            $message = 'Utilisateur modifié !'.$user->getNom()." ".$user->getPrenom();
+            $this->addFlash('success' ,$message);
+            $em->flush();
+            return $this->redirectToRoute('admin_liste_user'); 
+        }
+
+        return $this->render('admin/user.html.twig',[
+            'userForm' => $form->createView()
+        ]);  
+      
+   }
 }

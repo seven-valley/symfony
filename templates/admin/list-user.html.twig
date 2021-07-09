@@ -1,0 +1,74 @@
+{% extends 'backoffice.html.twig' %}
+
+{#  je recupère le contenu du block parent #}
+{% block title %} Liste Utilisateur {{ parent() }} {% endblock %}
+
+{% block main %}
+<div class="row">
+			<!-- 100% 12 colonnes -->
+			<div class="col-2"></div>
+			<div class="col-8">
+				<br>
+				<h3>Liste des utilisateurs</h3>
+
+				{% for label, messages in app.flashes %}
+				    
+				    {% for message in messages %}
+				    	<div class="alert alert-{{ label }}" role="alert">
+  						 {{ message }}
+						</div>
+				        
+				    {% endfor %}
+				    
+				{% endfor %}
+								
+				<table class="table mt-5 table-striped">
+					<thead>
+						<tr>
+							<th>Prénom</th>
+							<th>Nom</th>
+							<th>Role</th>
+							<th>Email</th>
+							
+							<th colspan="2">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for u in users %}
+						<tr>
+							<td>
+							{{ u.prenom }}</td>
+							<td>{{u.nom }}</td>
+							<td>
+							<a href="{{path('admin_change_user', { 'id': u.id}) }}">
+								{{ u.roles[0] }}
+							</a>
+							</td>
+							<td>{{ u.email }}</td>
+							<td>
+								<a
+onclick="return confirm('Voulez vous supprimer {{ u.prenom }}  {{ u.nom }} ?')" 
+								href="{{ path('delete_user', { 'id': u.id} )}}" class="btn btn-danger">
+									<i class="fas fa-trash"></i>
+								</a>
+							</td>
+							<td>
+								<a 
+								href="{{  path('edit_user', { 'id': u.id} ) }}" 
+							 	class="btn btn-primary">
+									<i class="fas fa-edit"></i>
+								</a>
+							</td>
+							
+						</tr>
+					{% endfor %}
+					</tbody>
+				</table>
+			</div>
+
+
+
+		</div>
+{% endblock %}
+
+

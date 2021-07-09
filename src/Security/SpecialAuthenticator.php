@@ -97,8 +97,8 @@ class SpecialAuthenticator extends AbstractFormLoginAuthenticator implements Pas
         }
 
         // Apres la validation du Login je vais vers
-        return new RedirectResponse($this->urlGenerator->generate('admin'));
-       // throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+       return new RedirectResponse($this->urlGenerator->generate('admin'));
+     //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
     protected function getLoginUrl()

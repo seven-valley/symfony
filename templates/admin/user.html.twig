@@ -1,0 +1,30 @@
+{% extends 'backoffice.html.twig' %}
+
+{#  je recupère le contenu du block parent #}
+{% block title %} User {{ parent() }} {% endblock %}
+
+{% block main %}
+<div class="row">
+			<!-- 100% 12 colonnes -->
+			<div class="col-2"></div>
+			<div class="col-8">
+				<br>
+				<h3>Modifier un utilisateur</h3>
+				{# <form ...>  #}
+				{{ form_start(userForm) }}
+				{# afficher ts les champs #}
+				{{ form_widget(userForm) }}
+				<button type="submit" class="btn btn-primary">
+					<i class="fas fa-edit"></i>
+				</button>
+				<br><br>
+				{# </form>  #}
+				{{ form_end(userForm) }}
+			</div>
+
+
+
+		</div>
+{% endblock %}
+
+
